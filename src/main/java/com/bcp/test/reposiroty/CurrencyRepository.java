@@ -1,8 +1,6 @@
 package com.bcp.test.reposiroty;
 
-import com.bcp.test.model.Change;
 import com.bcp.test.model.Currency;
-import com.bcp.test.model.User;
 
 import java.util.Optional;
 import java.util.UUID;

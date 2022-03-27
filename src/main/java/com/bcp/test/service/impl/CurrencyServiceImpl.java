@@ -52,10 +52,10 @@ public class CurrencyServiceImpl implements CurrencyService {
 					.lines()
 					.collect(Collectors.joining("\n"));
 			List<Map> myObjects = objectMapper.readValue(jsonInput, new TypeReference<List<Map>>(){});
-			for(Map m : myObjects) {
+			for (Map m : myObjects) {
 				for (Object key : m.keySet()) {
 					Optional<Currency> optional = currencyRepository.findByCode(key.toString());
-					if(!optional.isPresent()) {
+					if (!optional.isPresent()) {
 						Currency c = new Currency();
 						c.setCode(key.toString());
 						c.setName(m.get(key).toString());;

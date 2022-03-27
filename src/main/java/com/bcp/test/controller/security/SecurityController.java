@@ -1,12 +1,6 @@
-package com.bcp.test.controller;
+package com.bcp.test.controller.security;
 
-import java.util.Objects;
-
-import com.bcp.test.config.security.JwtTokenUtil;
-import com.bcp.test.dto.jwt.JwtRequest;
-import com.bcp.test.dto.jwt.JwtResponse;
-import com.bcp.test.dto.jwt.UserDto;
-import com.bcp.test.service.impl.JwtUserDetailsService;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bcp.test.config.security.JwtTokenUtil;
+import com.bcp.test.dto.jwt.JwtResponse;
+import com.bcp.test.dto.user.UserDto;
+import com.bcp.test.dto.user.UserRequest;
+import com.bcp.test.service.impl.JwtUserDetailsService;
+
 @RestController
+@RequestMapping(value = "/v1/security")
 @CrossOrigin
-public class JwtAuthenticationController {
+public class SecurityController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -35,12 +36,13 @@ public class JwtAuthenticationController {
 	private JwtUserDetailsService userDetailsService;
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	public ResponseEntity<?> createAuthenticationToken(
+			@Valid @RequestBody UserRequest user) throws Exception {
 
-		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+		authenticate(user.getEmail(), user.getPassword());
 
 		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername(authenticationRequest.getUsername());
+				.loadUserByUsername(user.getEmail());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
@@ -48,7 +50,8 @@ public class JwtAuthenticationController {
 	}
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody UserDto user) throws Exception {
+	public ResponseEntity<?> saveUser(
+			@Valid @RequestBody UserRequest user) throws Exception {
 		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 

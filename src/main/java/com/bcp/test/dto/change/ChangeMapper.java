@@ -31,7 +31,7 @@ public abstract class ChangeMapper {
 
 	public abstract Change toModel(ChangeRequest change);
 
-	public  abstract void updateModel(ChangeRequest changeRequest , @MappingTarget Change change);
+	public  abstract void updateModel(ChangeRequest changeRequest, @MappingTarget Change change);
 
 	public CurrencyService getCurrencyService() {
 		return currencyService;

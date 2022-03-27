@@ -42,7 +42,7 @@ public class ChangeServiceImpl implements ChangeService {
 	@Override
 	public Single<ChangeDto> create(ChangeRequest changeRequest) {
 		User user = (User) authenticationService.getAuthentication().getPrincipal(); 
-	    return saveBookToRepository(changeRequest,user.getUsername());
+	    return saveBookToRepository(changeRequest, user.getUsername());
     }
 
     private Single<ChangeDto> saveBookToRepository(ChangeRequest changeRequest, String username) {

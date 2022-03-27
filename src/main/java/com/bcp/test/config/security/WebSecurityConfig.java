@@ -3,6 +3,9 @@ package com.bcp.test.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -47,20 +51,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	
+	@Bean
+	public RoleHierarchy roleHierarchy() {
+	    RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+	    String hierarchy = "ROLE_ADMIN > ROLE_STAFF \n ROLE_STAFF > ROLE_USER";
+	    roleHierarchy.setHierarchy(hierarchy);
+	    return roleHierarchy;
+	}
+	
+	@Bean
+	public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+	    DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+	    expressionHandler.setRoleHierarchy(roleHierarchy());
+	    return expressionHandler;
+	}
+
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/authenticate", "/register").permitAll().
+				.authorizeRequests().antMatchers("/v1/security/authenticate", "/v1/security/register").permitAll()
 				// all other requests need to be authenticated
-				anyRequest().authenticated().and().
+				.antMatchers("/v1/currency*").hasAuthority("READ_PRIVILEGE")
+				.antMatchers(HttpMethod.GET, "/v1/change*").hasAuthority("READ_PRIVILEGE")
+				.antMatchers(HttpMethod.POST, "/v1/change*").hasAuthority("WRITE_PRIVILEGE")
+				.antMatchers(HttpMethod.PUT, "/v1/change/*").hasAuthority("WRITE_PRIVILEGE")
+				.anyRequest().authenticated()
+				.and()
 				// make sure we use stateless session; session won't be used to
 				// store user's state.
-				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.enableSessionUrlRewriting(true)
 				;
 
 		// Add a filter to validate the tokens with every request
