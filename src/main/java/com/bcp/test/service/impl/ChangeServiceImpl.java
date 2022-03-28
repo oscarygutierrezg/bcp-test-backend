@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.bcp.test.dto.change.ChangeDto;
 import com.bcp.test.dto.change.ChangeFullDto;
@@ -51,7 +53,10 @@ public class ChangeServiceImpl implements ChangeService {
             Optional<Currency> optionalCurrencyFrom = currencyRepository.findById(changeRequest.getCurrencyFrom());
             Optional<Currency> optionalCurrencyTo = currencyRepository.findById(changeRequest.getCurrencyTo());
             if (!optionalCurrencyFrom.isPresent() || !optionalCurrencyTo.isPresent())
-                singleSubscriber.onError(new EntityNotFoundException());
+                singleSubscriber.onError(new 
+                		  ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Moneda no regsitrada", null)
+                	      
+                		);
             else {
             	Change model = changeMapper.toModel(changeRequest);
             	model.setCreatedBy(username);		
