@@ -1,12 +1,12 @@
 package com.bcp.test.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.bcp.test.dto.change.ChangeDto;
+import com.bcp.test.dto.change.ChangeFullDto;
 import com.bcp.test.dto.change.ChangeRequest;
 
 import io.reactivex.Completable;
@@ -19,7 +19,7 @@ public interface ChangeService {
 
 	Single<Page<ChangeDto>> getAll(Pageable pageable);
 
-	Single<ChangeDto> show(UUID uuid);
+	Single<ChangeFullDto> show(UUID uuid);
 
 
 }

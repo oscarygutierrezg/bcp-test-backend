@@ -78,7 +78,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 		return Single.create(singleSubscriber -> {
 			List<CurrencyDto> currencies = currencyRepository.findAll().stream().
 					map(currencyMapper::toDto)
-					.collect(Collectors.toList());;
+					.collect(Collectors.toList());
 			singleSubscriber.onSuccess(currencies);
 		});
 	}

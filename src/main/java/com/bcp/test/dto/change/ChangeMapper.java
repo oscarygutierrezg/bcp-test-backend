@@ -28,6 +28,7 @@ public abstract class ChangeMapper {
 		@Mapping(target = "currencyFrom", expression = "java(getCurrencyService().findById(change.getCurrencyFrom()).getCode())")
 	})
 	public abstract ChangeDto toDto(Change change);
+	public abstract ChangeFullDto toDtoFull(Change change);
 
 	public abstract Change toModel(ChangeRequest change);
 

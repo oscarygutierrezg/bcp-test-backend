@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bcp.test.dto.change.ChangeDto;
+import com.bcp.test.dto.change.ChangeFullDto;
 import com.bcp.test.dto.change.ChangeRequest;
 import com.bcp.test.service.ChangeService;
 
@@ -27,6 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @RestController
 @RequestMapping(value = "/v1/change")
+@CrossOrigin
 public class ChangeController {
 
 	@Autowired
@@ -69,7 +72,7 @@ public class ChangeController {
 			value = "/{changeId}",
 			produces = MediaType.APPLICATION_JSON_VALUE
 			)
-	public  Single<ResponseEntity<ChangeDto>>  getChangeDetail(@PathVariable(value = "changeId") UUID changeId) {
+	public  Single<ResponseEntity<ChangeFullDto>>  getChangeDetail(@PathVariable(value = "changeId") UUID changeId) {
 		return changeService.show(changeId)
 				.subscribeOn(Schedulers.io())
 				.map(changeResponse -> ResponseEntity.ok().body(changeResponse));

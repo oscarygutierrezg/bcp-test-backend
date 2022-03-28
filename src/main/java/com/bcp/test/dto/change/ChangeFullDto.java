@@ -2,23 +2,23 @@ package com.bcp.test.dto.change;
 
 import java.util.UUID;
 
-public class ChangeDto {
-	protected UUID id;
-	protected String currencyTo;
-	protected String currencyFrom;
-	protected Double amount;
-	protected Double rate;
-	protected String exchangeRate;
-	public String getCurrencyTo() {
+public class ChangeFullDto {
+	private UUID id;
+	private UUID currencyTo;
+	private UUID currencyFrom;
+	private Double amount;
+	private Double rate;
+	private String exchangeRate;
+	public UUID getCurrencyTo() {
 		return currencyTo;
 	}
-	public void setCurrencyTo(String currencyTo) {
+	public void setCurrencyTo(UUID currencyTo) {
 		this.currencyTo = currencyTo;
 	}
-	public String getCurrencyFrom() {
+	public UUID getCurrencyFrom() {
 		return currencyFrom;
 	}
-	public void setCurrencyFrom(String currencyFrom) {
+	public void setCurrencyFrom(UUID currencyFrom) {
 		this.currencyFrom = currencyFrom;
 	}
 	public Double getAmount() {

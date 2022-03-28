@@ -75,10 +75,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/v1/security/authenticate", "/v1/security/register").permitAll()
 				// all other requests need to be authenticated
+				.antMatchers(HttpMethod.OPTIONS,"/v1/currency*").permitAll()
+				.antMatchers(HttpMethod.OPTIONS,"/v1/change*").permitAll()
+				.antMatchers(HttpMethod.OPTIONS,"/v1/change/*").permitAll()
 				.antMatchers("/v1/currency*").hasAuthority("READ_PRIVILEGE")
-				.antMatchers(HttpMethod.GET, "/v1/change*").hasAuthority("READ_PRIVILEGE")
-				.antMatchers(HttpMethod.POST, "/v1/change*").hasAuthority("WRITE_PRIVILEGE")
-				.antMatchers(HttpMethod.PUT, "/v1/change/*").hasAuthority("WRITE_PRIVILEGE")
+				.antMatchers(HttpMethod.GET,"/v1/change*").hasAuthority("READ_PRIVILEGE")
+				.antMatchers(HttpMethod.POST,"/v1/change*").hasAuthority("WRITE_PRIVILEGE")
+				.antMatchers(HttpMethod.PUT,"/v1/change/*").hasAuthority("WRITE_PRIVILEGE")
 				.anyRequest().authenticated()
 				.and()
 				// make sure we use stateless session; session won't be used to

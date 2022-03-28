@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import com.bcp.test.dto.change.ChangeDto;
+import com.bcp.test.dto.change.ChangeFullDto;
 import com.bcp.test.dto.change.ChangeMapper;
 import com.bcp.test.dto.change.ChangeRequest;
 import com.bcp.test.model.Change;
@@ -99,17 +100,17 @@ public class ChangeServiceImpl implements ChangeService {
     }
     
 	@Override
-	public Single<ChangeDto> show(UUID uuid) {
+	public Single<ChangeFullDto> show(UUID uuid) {
 		return findChangeDetailInRepository(uuid);
 	}
 
-    private Single<ChangeDto> findChangeDetailInRepository(UUID id) {
+    private Single<ChangeFullDto> findChangeDetailInRepository(UUID id) {
         return Single.create(singleSubscriber -> {
             Optional<Change> optionalChange = changeRepository.findById(id);
             if (!optionalChange.isPresent())
                 singleSubscriber.onError(new EntityNotFoundException());
             else {
-                ChangeDto ChangeDto = changeMapper.toDto(optionalChange.get());
+            	ChangeFullDto ChangeDto = changeMapper.toDtoFull(optionalChange.get());
                 singleSubscriber.onSuccess(ChangeDto);
             }
         });
